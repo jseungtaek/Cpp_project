@@ -1,5 +1,6 @@
 #include <iostream>
-#include <ncurses.h>
+// #include <ncurses.h>
+#include <ncursesw/curses.h>
 #include <locale.h> // 유니코드 그리는 용
 #include <vector> // snake 구현용
 #include <cstdlib> // rand 함수
@@ -296,7 +297,7 @@ void drawWindow() {
       if (snakeMap[i][j] == WALL) {
         attron(COLOR_PAIR(WALL));
         mvprintw(i,j*2, "\u25A0");
-        attroff(COLOR_PAIR(WALL));
+		attroff(COLOR_PAIR(WALL));
       }
       else if (snakeMap[i][j] == IMMUNE_WALL) {
         attron(COLOR_PAIR(IMMUNE_WALL));
