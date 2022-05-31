@@ -11,10 +11,10 @@ SRCS = snake.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 %.o : %.cpp
-	$(CC) $< -lncursesw
+	$(CC) -c $<
 
 $(NAME) : $(OBJS)
-	    @ $(AR) $(NAME) $(OBJS)
+		$(CC) -o $(NAME) $(OBJS) -lncursesw
 
 all : $(NAME)
 
