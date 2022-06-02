@@ -2,11 +2,11 @@
 
 int32 Map[MAP_SIZE + 1][MAP_SIZE + 1]; // 이차원 map
 
-int32 snake_speed;		// 뱀이 움직이는 시간
-char running_direction; // 방향 : right, left, up, donw
+int32 snake_speed;		  // 뱀이 움직이는 시간
+string running_direction; // 방향 : right, left, up, donw
 bool gameover;
 
-//position vector
+// position vector
 vector<BasicPosition> snake;
 // item
 BasicPosition upgrade_item;
@@ -30,7 +30,6 @@ int stage;
 // int exit_x, exit_y;
 int check_up_item, check_down_item, check_passed_g, max_body_len;
 
-
 void Start()
 {
 
@@ -41,7 +40,7 @@ void Start()
 	refresh();
 	usleep(2000000);
 
-	running_direction = 'l';
+	running_direction = "left";
 	snake_speed = 120000;
 	upgrade_item_cnt = 0;
 	downgrade_item_cnt = 0;
@@ -58,30 +57,29 @@ void Start()
 	max_body_len = 3;
 	snake = {};
 	Init_Window();
-    switch (stage)
-    {
-        case 0:
-        set_StageOne();
-        break;
-        case 1:
-        set_StageTwo();
-        break;
-        case 2:
-        set_StageThree();
-        break;
-        case 3:
-        set_StageFour();
-        break;
-        default:
-        break;
-    }
+	switch (stage)
+	{
+	case 0:
+		set_StageOne();
+		break;
+	case 1:
+		set_StageTwo();
+		break;
+	case 2:
+		set_StageThree();
+		break;
+	case 3:
+		set_StageFour();
+		break;
+	default:
+		break;
+	}
 	set_Snake();
 	set_UpgradeItem();
 	set_DowngradeItem();
 	set_Gate();
 	draw_cnt_all();
 	draw_Window();
-	// draw_cnt_all();
 	set_goal();
 
 	refresh();
@@ -105,7 +103,6 @@ void Play()
 			set_Gate();
 		all_timer();
 		moveSnake();
-		// draw_cnt_all();
 		draw_Window();
 		draw_cnt_all();
 		usleep(snake_speed);
@@ -194,24 +191,24 @@ void draw_cnt_all()
 {
 	for (int i = 0; i < 18; i++)
 	{
-		for (int j = 44; j < 59; j++)
+		for (int j = 49; j < 63; j++)
 		{
 
 			if (i == 0 || i == 6 || i == 8 || i == 14 || i == 17)
 				mvprintw(i, j, "-");
-			else if (i!=7 && (j == 44 || j == 58))
+			else if (i != 7 && (j == 49 || j == 62))
 				mvprintw(i, j, "|");
 		}
 	}
 
-	mvprintw(1, 47, "Score Board");
-	mvprintw(2, 47, "Len: %d / %d", snake.size(), max_body_len);
-	mvprintw(3, 47, "Up: %d", check_up_item);
-	mvprintw(4, 47, "Down: %d", check_down_item);
-	mvprintw(5, 47, "Gate: %d", check_passed_g);
+	mvprintw(1, 50, "Score Board");
+	mvprintw(2, 50, "Len: %d / %d", snake.size(), max_body_len);
+	mvprintw(3, 50, "Up: %d", check_up_item);
+	mvprintw(4, 50, "Down: %d", check_down_item);
+	mvprintw(5, 50, "Gate: %d", check_passed_g);
 
-	mvprintw(9, 47, "Goal Board ");
-	mvprintw(10, 47, "Len: %d", now_body_len);
+	mvprintw(9, 50, "Goal Board ");
+	mvprintw(10, 50, "Len: %d", now_body_len);
 	if (max_body_len >= now_body_len)
 	{
 		printw(" (V)");
@@ -220,7 +217,7 @@ void draw_cnt_all()
 	{
 		printw(" ( )");
 	}
-	mvprintw(11, 47, "Up: %d", upgrade_now_cnt);
+	mvprintw(11, 50, "Up: %d", upgrade_now_cnt);
 	if (check_up_item >= upgrade_now_cnt)
 	{
 		printw(" (V)");
@@ -229,7 +226,7 @@ void draw_cnt_all()
 	{
 		printw(" ( )");
 	}
-	mvprintw(12, 47, "Down: %d", downgrade_now_cnt);
+	mvprintw(12, 50, "Down: %d", downgrade_now_cnt);
 	if (check_down_item >= downgrade_now_cnt)
 	{
 		printw(" (V)");
@@ -238,7 +235,7 @@ void draw_cnt_all()
 	{
 		printw(" ( )");
 	}
-	mvprintw(13, 47, "Gate: %d", gate_pass_cnt);
+	mvprintw(13, 50, "Gate: %d", gate_pass_cnt);
 	if (check_passed_g >= gate_pass_cnt)
 	{
 		printw(" (V)");
@@ -247,7 +244,7 @@ void draw_cnt_all()
 	{
 		printw(" ( )");
 	}
-	mvprintw(15, 47, "Gate Time");
+	mvprintw(15, 50, "Gate Time");
 	mvprintw(16, 50, " %d ", leftover_time_gate);
 
 	refresh();
@@ -263,7 +260,7 @@ void moveSnake()
 			Map[first_gate_position.y][first_gate_position.x] = WALL;
 			Map[second_gate_position.y][second_gate_position.x] = WALL;
 			check_passed_g += 1; //획득개수 체크
-						  // set_Gate();
+								 // set_Gate();
 		}
 		passed_gate_cnt--;
 	}
@@ -281,42 +278,43 @@ void moveSnake()
 		snake[i].y = snake[i - 1].y;
 	}
 
-	int32 key = getch(); // 방향키 입력받기
-	switch (key)
+	
+	int32 key; // 방향키 입력받기
+	switch (key = getch())
 	{
 	case KEY_LEFT:
-		if (running_direction != 'r')
-			running_direction = 'l';
+		if (running_direction != "right")
+			running_direction = "left";
 		else
 			gameover = true;
 		break;
 	case KEY_RIGHT:
-		if (running_direction != 'l')
-			running_direction = 'r';
+		if (running_direction != "left")
+			running_direction = "right";
 		else
 			gameover = true;
 		break;
 	case KEY_UP:
-		if (running_direction != 'd')
-			running_direction = 'u';
+		if (running_direction != "down")
+			running_direction = "up";
 		else
 			gameover = true;
 		break;
 	case KEY_DOWN:
-		if (running_direction != 'u')
-			running_direction = 'd';
+		if (running_direction != "up")	
+			running_direction = "down";
 		else
 			gameover = true;
 		break;
 	}
 
-	if (running_direction == 'l')
+	if (running_direction == "left")
 		snake[0].x--;
-	else if (running_direction == 'r')
+	else if (running_direction == "right")
 		snake[0].x++;
-	else if (running_direction == 'u')
+	else if (running_direction == "up")
 		snake[0].y--;
-	else if (running_direction == 'd')
+	else if (running_direction == "down")
 		snake[0].y++;
 
 	// 자기 몸통에 부딪힐 때
@@ -325,33 +323,8 @@ void moveSnake()
 		if (snake[0].x == snake[i].x && snake[0].y == snake[i].y)
 			gameover = true;
 	}
-	// 벽에 부딪힐 때
-	if (Map[snake[0].y][snake[0].x] == WALL || Map[snake[0].y][snake[0].x] == PERMANENT_WALL)
-		gameover = true;
-
-	// 성장 아이템
-	if (Map[snake[0].y][snake[0].x] == UPITEM)
-	{
-		upgrade_item_cnt--;
-		check_up_item += 1;
-		snake.push_back(last_body);
-
-		if (max_body_len < snake.size())
-		{
-			max_body_len = snake.size();
-		}
-	}
-
-	// 독 아이템
-	if (Map[snake[0].y][snake[0].x] == DOWNITEM)
-	{
-		if (snake.size() == 3)
-			gameover = true;
-		Map[snake[last - 1].y][snake[last - 1].x] = EMPTY;
-		check_down_item += 1;
-		downgrade_item_cnt--;
-		snake.pop_back();
-	}
+	
+	set_Modified(last_body, last); // 벽, 아이템 처리
 
 	// pass gate
 	if (Map[snake[0].y][snake[0].x] == GATE)
@@ -375,25 +348,25 @@ void moveSnake()
 		{
 			snake[0].y = exit_position.x;
 			snake[0].x = exit_position.y + 1;
-			running_direction = 'r';
+			running_direction = "right";
 		}
 		else if (exit_position.y == MAP_SIZE)
 		{
 			snake[0].y = exit_position.x;
 			snake[0].x = exit_position.y - 1;
-			running_direction = 'l';
+			running_direction = "left";
 		}
 		else if (exit_position.x == 0)
 		{
 			snake[0].y = exit_position.x + 1;
 			snake[0].x = exit_position.y;
-			running_direction = 'd';
+			running_direction = "down";
 		}
 		else if (exit_position.x == MAP_SIZE)
 		{
 			snake[0].y = exit_position.x - 1;
 			snake[0].x = exit_position.y;
-			running_direction = 'u';
+			running_direction = "up";
 		}
 
 		//게이트의 위치가 가장자리가 아닌 경우
@@ -402,16 +375,16 @@ void moveSnake()
 			snake[0].y = exit_position.x;
 			snake[0].x = exit_position.y;
 
-			char tempdir = running_direction;
+			string tempdir = running_direction;
 
 			// 진입 방향과 일치
-			if (running_direction == 'l')
+			if (running_direction == "left")
 				snake[0].x--;
-			else if (running_direction == 'r')
+			else if (running_direction == "right")
 				snake[0].x++;
-			else if (running_direction == 'u')
+			else if (running_direction == "up")
 				snake[0].y--;
-			else if (running_direction == 'd')
+			else if (running_direction == "down")
 				snake[0].y++;
 
 			if (Map[snake[0].y][snake[0].x] == GATE || Map[snake[0].y][snake[0].x] == WALL || Map[snake[0].y][snake[0].x] == PERMANENT_WALL)
@@ -420,29 +393,30 @@ void moveSnake()
 				snake[0].x = exit_position.y;
 
 				// 진입 방향의 시계방향
-				switch (running_direction)
+				while (true)
 				{
-				case 'u':
-					running_direction = 'r';
-					break;
-				case 'd':
-					running_direction = 'l';
-					break;
-				case 'l':
-					running_direction = 'u';
-					break;
-				case 'r':
-					running_direction = 'd';
+					if (running_direction == "up")
+					{
+						running_direction = "right";
+						snake[0].x++;
+					}
+					if (running_direction == "down")
+					{
+						running_direction = "left";
+						snake[0].x--;
+					}
+					if (running_direction == "left")
+					{
+						running_direction = "up";
+						snake[0].y--;
+					}
+					if (running_direction == "right")
+					{
+						running_direction = "down";
+						snake[0].y++;
+					}
 					break;
 				}
-				if (running_direction == 'l')
-					snake[0].x--;
-				else if (running_direction == 'r')
-					snake[0].x++;
-				else if (running_direction == 'u')
-					snake[0].y--;
-				else if (running_direction == 'd')
-					snake[0].y++;
 
 				if (Map[snake[0].y][snake[0].x] == GATE || Map[snake[0].y][snake[0].x] == WALL || Map[snake[0].y][snake[0].x] == PERMANENT_WALL)
 				{
@@ -450,57 +424,51 @@ void moveSnake()
 					snake[0].x = exit_position.y;
 
 					// 진입 방향의 반시계방향
-					switch (tempdir)
+					while (true)
 					{
-					case 'u':
-						running_direction = 'l';
-						break;
-					case 'd':
-						running_direction = 'r';
-						break;
-					case 'l':
-						running_direction = 'd';
-						break;
-					case 'r':
-						running_direction = 'u';
+						if (tempdir == "up")
+							running_direction = "left";
+						if (tempdir == "down")
+							running_direction = "right";
+						if (tempdir == "left")
+							running_direction = "down";
+						if (tempdir == "right")
+							running_direction = "up";
 						break;
 					}
-					if (running_direction == 'l')
+					if (running_direction == "left")
 						snake[0].x--;
-					else if (running_direction == 'r')
+					else if (running_direction == "right")
 						snake[0].x++;
-					else if (running_direction == 'u')
+					else if (running_direction == "up")
 						snake[0].y--;
-					else if (running_direction == 'd')
+					else if (running_direction == "down")
 						snake[0].y++;
 
 					if (Map[snake[0].y][snake[0].x] == GATE || Map[snake[0].y][snake[0].x] == WALL || Map[snake[0].y][snake[0].x] == PERMANENT_WALL)
 					{
 						snake[0].y = exit_position.x;
 						snake[0].x = exit_position.y;
-						switch (tempdir)
+						while (true)
 						{
-						case 'u':
-							running_direction = 'd';
-							break;
-						case 'd':
-							running_direction = 'u';
-							break;
-						case 'l':
-							running_direction = 'r';
-							break;
-						case 'r':
-							running_direction = 'l';
+							if (tempdir == "up")
+								running_direction = "down";
+							if (tempdir == "down")
+								running_direction = "up";
+							if (tempdir == "left")
+								running_direction = "right";
+							if (tempdir == "right")
+								running_direction = "left";
 							break;
 						}
 
-						if (running_direction == 'l')
+						if (running_direction == "left")
 							snake[0].x--;
-						else if (running_direction == 'r')
+						else if (running_direction == "right")
 							snake[0].x++;
-						else if (running_direction == 'u')
+						else if (running_direction == "up")
 							snake[0].y--;
-						else if (running_direction == 'd')
+						else if (running_direction == "down")
 							snake[0].y++;
 					}
 				}
@@ -516,7 +484,6 @@ void moveSnake()
 	}
 	check_goal();
 }
-
 
 void all_timer()
 {
@@ -555,8 +522,8 @@ void check_goal()
 		if (stage <= 3)
 		{
 			clear();
-			mvprintw(MAP_SIZE / 2, MAP_SIZE, "You Cleared Stage %d!", stage + 1);
-			mvprintw(MAP_SIZE / 2 + 1, MAP_SIZE + 1, "Lets' move on to the Next Stage");
+			mvprintw(MAP_SIZE / 2, MAP_SIZE, "Stage %d Clear!", stage + 1);
+			mvprintw(MAP_SIZE / 2 + 1, MAP_SIZE, "Go to the Next Stage");
 			Map[snake[0].y][snake[0].x] = HEAD;
 			for (int i = 1; i < 3; i++)
 			{
@@ -571,8 +538,8 @@ void check_goal()
 		else
 		{
 			clear();
-			mvprintw(MAP_SIZE / 2, MAP_SIZE, "You Cleared All Stages");
-			mvprintw(MAP_SIZE / 2 + 1, MAP_SIZE + 1, "Great Job!");
+			mvprintw(MAP_SIZE / 2, MAP_SIZE, "All Stages Clear!");
+			mvprintw(MAP_SIZE / 2 + 1, MAP_SIZE + 1, "Gooood!");
 			refresh();
 			usleep(2000000);
 		}

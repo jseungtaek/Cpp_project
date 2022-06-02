@@ -53,6 +53,9 @@ void set_StageTwo()
 		{
 			if (i % 2 == 0 && j == MAP_SIZE / 2)
 				Map[i][j] = WALL;
+			if (j >= 1 && j <= MAP_SIZE - 1)
+				if(i == MAP_SIZE / 2 || i == MAP_SIZE / 2 + 1 || i == MAP_SIZE / 2 - 1)
+					Map[i][j] = EMPTY;
 		}
 	}
 }
@@ -66,14 +69,14 @@ void set_StageThree()
         {
             if (i == MAP_SIZE / 2)
             {
-                if (j <= MAP_SIZE / 2 - 4 || j >= MAP_SIZE / 2 + 4)
+                if (j <= MAP_SIZE / 2 - 5 || j >= MAP_SIZE / 2 + 5)
                     Map[i][j] = WALL;
                 if (j == 0 || j == MAP_SIZE)
                     Map[i][j] = PERMANENT_WALL;
             }
             else if (j == MAP_SIZE / 2)
             {
-                if (i <= MAP_SIZE / 2 - 4 || i >= MAP_SIZE / 2 + 4)
+                if (i <= MAP_SIZE / 2 - 5 || i >= MAP_SIZE / 2 + 5)
                     Map[i][j] = WALL;
                 if (i == 0 || i == MAP_SIZE)
                     Map[i][j] = PERMANENT_WALL;
@@ -91,6 +94,8 @@ void set_StageFour()
 		{
 			if (i == j)
 				Map[i][j] = WALL;
+			if (i == MAP_SIZE / 2 || i == MAP_SIZE / 2 + 1 || i == MAP_SIZE / 2 - 1)
+				Map[i][j] = EMPTY;
 		}
 	}
 }
@@ -99,6 +104,41 @@ void set_Snake()
 {
 	for (int32 i = 0; i < 3; i++)
 		snake.push_back(BasicPosition(MAP_SIZE / 2, MAP_SIZE / 2 + i)); //snake 초기 position
+}
+
+void set_Modified(BasicPosition &l_body, int32 &last)
+{
+	switch(Map[snake[0].y][snake[0].x])
+	{
+		case WALL: // 벽
+		gameover = true;
+		break;
+		case PERMANENT_WALL: // 벽
+		gameover = true;
+		break;
+		case UPITEM: // upitem
+		{
+			upgrade_item_cnt--;
+			check_up_item += 1;
+			snake.push_back(l_body);
+
+			if (max_body_len < snake.size())
+			{
+				max_body_len = snake.size();
+			}
+		}
+		break;
+		case DOWNITEM: //downitem
+		{
+			if (snake.size() == 3)
+				gameover = true;
+			Map[snake[last - 1].y][snake[last - 1].x] = EMPTY;
+			check_down_item += 1;
+			downgrade_item_cnt--;
+			snake.pop_back();
+		}
+		break;
+	}
 }
 
 void set_UpgradeItem()

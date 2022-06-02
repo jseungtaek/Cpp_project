@@ -7,10 +7,11 @@
 #include <cstdlib>	// rand 함수
 #include <ctime>	// 난수 생성
 #include <unistd.h> // sleep 함수
+#include <string>
 #include "BasicPosition.h"
 #include "SetGame.h"
 
-#define MAP_SIZE 21
+#define MAP_SIZE 23
 #define EMPTY 0
 #define WALL 1		  // WHITE
 #define PERMANENT_WALL 2 // YELLOW
@@ -41,7 +42,7 @@ void End();
 extern int32 Map[MAP_SIZE + 1][MAP_SIZE + 1]; // 이차원 map
 
 extern int32 snake_speed;		// 뱀이 움직이는 시간
-extern char running_direction; // 방향 : right, left, up, donw
+extern string running_direction; // 방향 : right, left, up, donw
 extern bool gameover;
 
 extern int upgrade_item_cnt;

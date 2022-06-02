@@ -14,6 +14,7 @@ void set_StageFour();
 void set_Snake();
 void set_UpgradeItem();
 void set_DowngradeItem();
+void set_Modified(BasicPosition &l_body, int32 &last);
 
 // step4
 void set_Gate();
