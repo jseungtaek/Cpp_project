@@ -1,6 +1,6 @@
 #include <iostream>
 // #include <ncurses.h>
-#include <ncursesw/curses.h>
+#include <ncursesw/curses.h> //nurses unicode 출력
 #include <locale.h> // 유니코드 그리는 용
 #include <vector>	// snake 구현용
 #include <cstdlib>	// rand 함수
@@ -125,9 +125,13 @@ void StartGame()
 	InitWindow();
 	resetStage();
 	if (stage == 0)
+	{
 		setStageOne();
+	}
 	if (stage == 1)
+	{
 		setStageTwo();
+	}
 	if (stage == 2)
 		setStageThree();
 	if (stage == 3)
@@ -375,7 +379,6 @@ void drawWindow()
 			}
 		}
 	}
-
 	refresh();
 }
 
@@ -759,9 +762,9 @@ void setGate()
 	srand((unsigned int)time(NULL));
 	while (1)
 	{
-		k = rand() % (MAP_SIZE + 1) + 1;
-		s = rand() % (MAP_SIZE + 1) + 1;
-		if (snakeMap[k][s] == WALL && snakeMap[k][s] != GATE && !(i==k&&j==s))
+		k = rand() % (MAP_SIZE + 1);
+		s = rand() % (MAP_SIZE + 1);
+		if (snakeMap[k][s] == WALL && snakeMap[k][s] != GATE && !(i == k && j == s))
 		{
 			snakeMap[k][s] = GATE;
 			gate_position2.x = k;
