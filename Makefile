@@ -6,7 +6,10 @@ RM = rm -f
 
 AR = ar rcs
 
-SRCS = snake.cpp
+SRCS = snake.cpp\
+		function.cpp\
+		SetGame.cpp\
+		BasicPosition.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
